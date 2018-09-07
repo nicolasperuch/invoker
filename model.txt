@@ -1,1 +1,4 @@
-Model Content
+This is a model!
+words starting with $dollar can be changed by invoker.
+
+Doesn't matter which line $placeholder is.
