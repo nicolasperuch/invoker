@@ -50,6 +50,7 @@ module.exports = function(robot){
                         if (err) throw err;
                         res.send("File create :dd:");
                     });
+
                     user.stage = -1;
                 });
             }
@@ -62,17 +63,7 @@ module.exports = function(robot){
         name = res.message.user.name.toLowerCase()
         user = robot.brain.get(name)
         try {
-            res.send("new model: "+ user.newWords)
-        } catch (e){
-            res.send("seems like you did not build you model yet!")
-        }
-    })
-
-    robot.respond(/show model/i, function(res){
-        name = res.message.user.name.toLowerCase()
-        user = robot.brain.get(name)
-        try {
-            res.send("new model: "+ user.newModel)
+            res.send("new words: "+ user.newWords)
         } catch (e){
             res.send("seems like you did not build you model yet!")
         }
