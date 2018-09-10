@@ -5,9 +5,9 @@ module.exports = function(robot){
         fs.readFile('model.txt', 'utf8', function(err, contents) {
             var words = contents.split(" ");
             var wordsToChange = [];
-
+            answer = '\"';
             words.filter(w => {
-                if(w.startsWith("$")){
+                if(w.startsWith("$$")){
                     wordsToChange.push(w)
                 }
             })
@@ -16,33 +16,35 @@ module.exports = function(robot){
             name = res.message.user.name.toLowerCase()
             
             robot.brain.set(name, user)
-            res.send("Current Model: ")
-            res.send("```" + contents + "```")
             res.send("*Words to change*")
-            wordsToChange.forEach(w => res.send("`" + w + "`"))
-            res.send("Would you like to change *" + wordsToChange[0] + "* for which word?")
+            wordsToChange.forEach(w => res.send(w))
+            res.send("Would you like to change " + wordsToChange[0] + " for which word?")
         });
     });
     
-    robot.hear(/(\w+)\s(\w+)/i, function(res){
+    robot.hear(/(.*)/i, function(res){
         name = res.message.user.name.toLowerCase()
         user = robot.brain.get(name)
         if (user != null && user.stage > -1){
-            answer = res.match[2]
+            let answer = '\"'
+            answer += res.match[0];
+            answer += '\"'
+
+            console.log(answer)
             user.name = answer
             user.newWords.push(answer)    
-            res.send("Changed *" + user.wordsToChange[user.stage] + "* for *" + answer + "*")
+            res.send("Changed " + user.wordsToChange[user.stage] + " for " + answer)
             user.stage++;            
 
             if(user.wordsToChange[user.stage]){
-                res.send("Would you like to change *" + user.wordsToChange[user.stage] + "* for which word?")
+                res.send("Would you like to change " + user.wordsToChange[user.stage] + " for which word?")
             } else {
                 fs.readFile('model.txt', 'utf8', function(err, contents) {
                     var newModel = contents;
 
                     res.send("> *Changes*")
                     for(let i=0; i < user.stage ;i++){
-                        res.send("~" + user.wordsToChange[i] +"~ -> *" + user.newWords[i] + "* :illusion:")
+                        res.send(user.wordsToChange[i] +" -> *" + user.newWords[i] + "* :illusion:")
                         newModel = newModel.replace(user.wordsToChange[i], user.newWords[i])
                     }
                     
