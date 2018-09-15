@@ -7,7 +7,7 @@ module.exports = function(robot){
             var wordsToChange = [];
             answer = '\"';
             words.filter(w => {
-                if(w.startsWith("$$")){
+                if(w.startsWith("$")){
                     wordsToChange.push(w)
                 }
             })
