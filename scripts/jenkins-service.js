@@ -1,24 +1,37 @@
 const axios = require('axios');
-const body = 
-'<?xml version="1.0" encoding="UTF-8"?><project>\
-<description/>\
-<keepDependencies>false</keepDependencies>\
-<properties/>\
-<scm class="hudson.scm.NullSCM"/>\
-<canRoam>true</canRoam>\
-<disabled>false</disabled>\
-<blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>\
-<blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>\
-<triggers/>\
-<concurrentBuild>false</concurrentBuild>\
-<builders>\
-  <hudson.tasks.Shell>\
-    <command>echo hello world</command>\
-  </hudson.tasks.Shell>\
-</builders>\
-<publishers/>\
-<buildWrappers/>\
-</project>'
+const pipelineBody = 
+'<?xml version=\'1.1\' encoding=\'UTF-8\'?>\
+<flow-definition plugin="workflow-job@2.25">\
+  <actions>\
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@1.3.2"/>\
+  </actions>\
+  <description></description>\
+  <keepDependencies>false</keepDependencies>\
+  <properties/>\
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition" plugin="workflow-cps@2.55">\
+    <scm class="hudson.plugins.git.GitSCM" plugin="git@3.9.1">\
+      <configVersion>2</configVersion>\
+      <userRemoteConfigs>\
+        <hudson.plugins.git.UserRemoteConfig>\
+          <url>https://github.com/nicolasperuch/micro-hello-world.git</url>\
+          <credentialsId>nicolasperuch</credentialsId>\
+        </hudson.plugins.git.UserRemoteConfig>\
+      </userRemoteConfigs>\
+      <branches>\
+        <hudson.plugins.git.BranchSpec>\
+          <name>*/master</name>\
+        </hudson.plugins.git.BranchSpec>\
+      </branches>\
+      <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>\
+      <submoduleCfg class="list"/>\
+      <extensions/>\
+    </scm>\
+    <scriptPath>Jenkinsfile</scriptPath>\
+    <lightweight>true</lightweight>\
+  </definition>\
+  <triggers/>\
+  <disabled>false</disabled>\
+</flow-definition>'
 
 module.exports = function(robot){
     
@@ -34,7 +47,7 @@ module.exports = function(robot){
 
   robot.respond(/jenkins job (.*) exists\?/i, function(res){
     let job = res.match[1]
-    axios.get('http://localhost:8081/checkJobName?value=' + job, { 
+    axios.get('http://localhost:8080/checkJobName?value=' + job, { 
             'headers': 
                 { 
                   'Authorization': 'Basic YWRtaW46YWRtaW4=' 
@@ -55,16 +68,16 @@ module.exports = function(robot){
             });
   }); 
 
-  robot.respond(/jenkins create job (.*)/i, function(res){
+  robot.respond(/jenkins create pipeline job (.*)/i, function(res){
     let job = res.match[1]
-    axios.post('http://localhost:8081/createItem?name=' + job, 
-            body,
+    axios.post('http://localhost:8080/createItem?name=' + job, 
+            pipelineBody,
             { 
             'headers': 
                 { 
-                  'Authorization': 'Basic *********' ,
+                  'Authorization': 'Basic YWRtaW46YWRtaW4=' ,
                   'Content-Type' : 'text/xml',
-                  'Jenkins-Crumb' : '*********'
+                  'Jenkins-Crumb' : '7c64a13bd78a47e6c79352403dd4daff'
                 } 
             })
             .then(response => {
