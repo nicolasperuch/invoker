@@ -77,8 +77,8 @@ module.exports = function(robot){
                 { 
                   'Authorization': 'Basic YWRtaW46YWRtaW4=' ,
                   'Content-Type' : 'text/xml',
-                  'Jenkins-Crumb' : '7c64a13bd78a47e6c79352403dd4daff'
-                } 
+                  'Jenkins-Crumb' : 'bebea6b21e40e004f6968da1fa63bea7'
+                }
             })
             .then(response => {
                 res.send('Job successfully created :dota_laugh:')               

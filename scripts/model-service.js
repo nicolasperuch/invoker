@@ -7,7 +7,7 @@ module.exports = function(robot){
             var wordsToChange = [];
             answer = '\"';
             words.filter(w => {
-                if(w.startsWith("$")){
+                if(w.startsWith("%")){
                     wordsToChange.push(w)
                 }
             })
@@ -27,7 +27,12 @@ module.exports = function(robot){
         user = robot.brain.get(name)
         if (user != null && user.stage > -1){
             let answer = '\"'
-            answer += res.match[0];
+            let userAnswer = res.match[0];
+            if(userAnswer.startsWith("@invoker")){
+               answer += userAnswer.slice(9)
+            } else {
+                answer += userAnswer
+            }
             answer += '\"'
 
             console.log(answer)
