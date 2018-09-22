@@ -1,4 +1,15 @@
-This is a model!
-words starting with $dollar can be changed by invoker.
-
-Doesn't matter which line $placeholder is.
+pipeline{
+    agent any		
+    stages {		
+        stage('Build Project') {		
+            steps {		
+                echo 'Start Application'		
+            }		
+        }		
+        stage('Done!') {		
+            steps {		
+                echo 'Done :)'		
+            }		
+        }		
+    }		
+} 
