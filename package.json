@@ -20,7 +20,8 @@
     "hubot-shipit": "^0.2.1",
     "hubot-slack": "^4.5.4",
     "jenkins": "^0.22.1",
-    "node-strings": "^1.0.2"
+    "node-strings": "^1.0.2",
+    "shelljs": "^0.8.2"
   },
   "engines": {
     "node": "0.10.x"
