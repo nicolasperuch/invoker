@@ -3,12 +3,12 @@ pipeline{
     stages {		
         stage('Build Project') {		
             steps {		
-                echo 'Start Application'		
+                echo %build-project-message		
             }		
         }		
         stage('Done!') {		
             steps {		
-                echo 'Done :)'		
+                echo %done-message
             }		
         }		
     }		

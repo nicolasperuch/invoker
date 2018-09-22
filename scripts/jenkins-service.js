@@ -88,4 +88,26 @@ module.exports = function(robot){
                 res.send(error)
             });
   }); 
+
+
+  robot.respond(/jenkins build (.*)/i, function(res){
+    let job = res.match[1]
+    axios.post('http://localhost:8080/job/' + job + '/build',
+            '',
+            { 
+            'headers': 
+                { 
+                  'Authorization': 'Basic YWRtaW46YWRtaW4=' ,
+                  'Content-Type' : 'text/xml',
+                  'Jenkins-Crumb' : 'bebea6b21e40e004f6968da1fa63bea7'
+                }
+            })
+            .then(response => {
+                res.send('Job successfully built :dota_laugh:')               
+            })
+            .catch(error => {
+                console.log(error)
+                res.send(error)
+            });
+  }); 
 }
