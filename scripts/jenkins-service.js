@@ -1,29 +1,13 @@
 const axios = require('axios');
 const fs = require('fs');
+const jenkins = require('../client/JenkinsRestClient');
+const utils = require('../utils/BotUtils')
 
 module.exports = function(robot){
     
   robot.respond(/jenkins job (.*) exists\?/i, function(res){
-    let job = res.match[1]
-    axios.get('http://localhost:8080/checkJobName?value=' + job, { 
-            'headers': 
-                { 
-                  'Authorization': 'Basic YWRtaW46YWRtaW4=' 
-                } 
-            })
-            .then(response => {
-                let data = response.data
-                console.log(data)                
-                if(data.includes("already exists")){
-                  res.send(job + ' already exists :dota_cry:')
-                } else {
-                  res.send(job + ' does not exists! :dota_smile:')
-                }
-            })
-            .catch(error => {
-                console.log(error)
-                res.send(error)
-            });
+    let target = utils.getUserData(res)
+    jenkins.targetJobExists(target, res)
   }); 
 
   robot.respond(/create pipeline from (.*)/i, function(res){
