@@ -17,13 +17,29 @@ function targetJobExists(targetJob, robot){
         });
 }
 
+function buildJob(targetJob, robot){
+    axios.post(
+            BASE_PATH + 'job/' + targetJob + '/build', '',
+            { 'headers': buildHeaders()}
+        )
+        .then(response => {
+            robot.send('Job successfully built :dota_laugh:')               
+        })
+        .catch(error => {
+            console.log(error)
+            robot.send(error)
+        });
+}
+
 function buildUrl(base, action, param){
     return base + action + param;
 }
 
 function buildHeaders(){
     return { 
-        'Authorization': 'Basic YWRtaW46YWRtaW4=' 
+        'Authorization': 'Basic YWRtaW46YWRtaW4=' ,
+        'Content-Type' : 'text/xml',
+        'Jenkins-Crumb' : 'bebea6b21e40e004f6968da1fa63bea7'
     }
 }
 
@@ -34,5 +50,6 @@ function jobExists(response){
 }
 
 module.exports = {
-    targetJobExists : targetJobExists
+    targetJobExists : targetJobExists,
+    buildJob : buildJob
 }
