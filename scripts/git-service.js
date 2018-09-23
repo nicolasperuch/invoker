@@ -1,5 +1,5 @@
 const shell = require('shelljs');
-const utils = require('../utils/BotUtils')
+const utils = require('../utils/bot-utils')
 
 module.exports = function(robot){
     

@@ -10,41 +10,26 @@ module.exports = function(robot){
     jenkins.targetJobExists(target, res)
   }); 
 
-  robot.respond(/create pipeline from (.*)/i, function(res){
-    let job = res.match[1]
-    let pipelineBody;
+  robot.respond(/create pipeline from (.*) with name (.*)/i, function(res){
+    let jobUrl = utils.getUserData(res)
+    let jobName = utils.getJobName(res)
 
     fs.readFile('pipeline-model.xml', 'utf8', function(err, contents) {
       let words = contents.split(" ");
       let placeholder = '';
       let gitUrl = '';
+      let pipelineBody = '';
+
       words.filter(w => {
         if(w.startsWith("<url>")){
             placeholder = w
-            gitUrl = '<url>' + job + '</url>\n'
+            gitUrl = '<url>' + jobUrl + '</url>\n'
         }
       })
 
       pipelineBody = contents;
       pipelineBody = pipelineBody.replace(placeholder, gitUrl)
-      
-      axios.post('http://localhost:8080/createItem?name=pipeline-test', 
-        pipelineBody.toString(),
-        { 
-        'headers': 
-            { 
-              'Authorization': 'Basic YWRtaW46YWRtaW4=' ,
-              'Content-Type' : 'text/xml',
-              'Jenkins-Crumb' : 'bebea6b21e40e004f6968da1fa63bea7'
-            }
-        })
-        .then(response => {
-            res.send('Job successfully created :dota_laugh:')               
-        })
-        .catch(error => {
-            console.log(error)
-            res.send(error)
-        });
+      jenkins.createItem(pipelineBody, jobName, res)
     });
   }); 
 
